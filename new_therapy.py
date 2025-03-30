@@ -322,7 +322,7 @@ from multiprocessing import Process, Queue, Event
 import cv2
 import numpy as np
 import librosa
-import pyaudio
+#import pyaudio
 import time
 from keras.models import load_model
 from keras.preprocessing.image import img_to_array
@@ -649,9 +649,9 @@ def audio_processing(audio_file, start_time, id, user_name):
         get_audio_file(id, audio_file)
     y, sr = librosa.load(audio_file, sr=None)
     print("loaded")
-    p = pyaudio.PyAudio()
-    print("audio pyaudio")
-    stream = p.open(format=pyaudio.paFloat32, channels=1, rate=sr, output=True)
+    # p = pyaudio.PyAudio()
+    # print("audio pyaudio")
+    # stream = p.open(format=pyaudio.paFloat32, channels=1, rate=sr, output=True)
     print("open")
     try : 
         doc_ref = db.collection('Songs').document("OiCdogKheZX0bljWo1AG")
@@ -725,10 +725,10 @@ def audio_processing(audio_file, start_time, id, user_name):
             print("breaking")
             break
 
-        stream.write(current_chunk.astype(np.float32).tobytes())
+    #     stream.write(current_chunk.astype(np.float32).tobytes())
 
-    stream.stop_stream() #close the stream and terminate the audio system
-    stream.close()
+    # stream.stop_stream() #close the stream and terminate the audio system
+    # stream.close()
     os.remove(audio_file)
     now = datetime.now()
     print(now)
@@ -788,10 +788,10 @@ def upload_audio_processing(audio_file, start_time, id, user_name):
     print("cal")
     y, sr = librosa.load(audio_file, sr=None)
     print("loaded")
-    p = pyaudio.PyAudio()
-    print("audio pyaudio")
-    stream = p.open(format=pyaudio.paFloat32, channels=1, rate=sr, output=True)
-    print("open")
+    # p = pyaudio.PyAudio()
+    # print("audio pyaudio")
+    # stream = p.open(format=pyaudio.paFloat32, channels=1, rate=sr, output=True)
+    # print("open")
 
     doc = db.collection("SIgnal").document("YVNeDHCXVFvg0G3wZc6c")
 
@@ -860,10 +860,10 @@ def upload_audio_processing(audio_file, start_time, id, user_name):
             print("breaking")
             break
 
-        stream.write(current_chunk.astype(np.float32).tobytes())
+    #     stream.write(current_chunk.astype(np.float32).tobytes())
 
-    stream.stop_stream() #close the stream and terminate the audio system
-    stream.close()
+    # stream.stop_stream() #close the stream and terminate the audio system
+    # stream.close()
     os.remove(audio_file)
     now = datetime.now()
     print(now)
@@ -888,11 +888,11 @@ def upload_audio_no_processing(audio_file, start_time, id, user_name):
     print("cal")
 
     y, sr = librosa.load(audio_file, sr=None)
-    print("loaded")
-    p = pyaudio.PyAudio()
-    print("audio pyaudio")
-    stream = p.open(format=pyaudio.paFloat32, channels=1, rate=sr, output=True)
-    print("open")
+    # print("loaded")
+    # p = pyaudio.PyAudio()
+    # print("audio pyaudio")
+    # stream = p.open(format=pyaudio.paFloat32, channels=1, rate=sr, output=True)
+    # print("open")
 
     doc = db.collection("SIgnal").document("YVNeDHCXVFvg0G3wZc6c")
 
@@ -964,11 +964,11 @@ def upload_audio_no_processing(audio_file, start_time, id, user_name):
             print("breaking")
             break
 
-        stream.write(chunk)
+    #     stream.write(chunk)
 
     
-    stream.stop_stream()
-    stream.close()
+    # stream.stop_stream()
+    # stream.close()
     os.remove(audio_file)
     now = datetime.now()
     print(now)
