@@ -517,9 +517,9 @@
         }
     </script>
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js'; import { getFirestore, doc, getDoc, collection } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js'; const firebaseConfig = { apiKey: "AIzaSyC63yFzDHFfLVjgkQHguXaaaFX5ZwO6pvM",
-        authDomain: "fir-f4899.firebaseapp.com", projectId: "fir-f4899", storageBucket: "fir-f4899.firebasestorage.app", messagingSenderId: "1062149271973", appId: "1:1062149271973:web:6eebd91264e25971a1b84c", measurementId: "G-X4GY1WBBT2" }; const app
-        = initializeApp(firebaseConfig); const db = getFirestore(app); window.checkDatabase = function() { getDoc(doc(db, "SIgnal", "YVNeDHCXVFvg0G3wZc6c")).then(docSnap => { if (docSnap.exists()) { console.log("Data exists"); const data = docSnap.data();
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js'; import { getFirestore, doc, getDoc, collection } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js'; const firebaseConfig ={ apiKey: "AIzaSyAehQ4Bg0tPyE422VtHE4P_0y9_c9xw0UI",
+        authDomain: "fir-32a46.firebaseapp.com", projectId: "fir-32a46", storageBucket: "fir-32a46.firebasestorage.app", messagingSenderId: "268688396023", appId: "1:268688396023:web:92098d24b8b577b8ba8df2", measurementId: "G-Z16P57S32D"               };
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app); window.checkDatabase = function() { getDoc(doc(db, "SIgnal", "YVNeDHCXVFvg0G3wZc6c")).then(docSnap => { if (docSnap.exists()) { console.log("Data exists"); const data = docSnap.data();
         const play = data["play"]; if (play === "true") { showLoadingVideo(); } else if (play === "false") { hideLoadingVideo(); } } else { console.log("No data"); } }); }
     </script>
 </body>
