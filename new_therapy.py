@@ -52,7 +52,7 @@ mail = Mail(app)
 
 cred = credentials.Certificate("sonicserenity-a3083-firebase-adminsdk-1b9uk-48f8cd2ff5.json")
 firebase_admin.initialize_app(cred, {
-    'storageBucket': 'sonicserenity-a3083.appspot.com'  
+    'storageBucket': 'fir-f4899.firebasestorage.app'  
 })
 db = firestore.client()
 bucket = storage.bucket()
@@ -64,24 +64,35 @@ doc.set({"play":"true"})
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret3.json")
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="http://127.0.0.1:5000/callback"
+    redirect_uri="http://127.0.0.1:3000/callback"
 )
 
 config = {
-    "apiKey": "AIzaSyBqWIbN3XzHSKgTRyFH2D9b4Ja9SIeEIDQ",
-    "authDomain": "sonicserenity-a3083.firebaseapp.com",
+    "apiKey": "AIzaSyC63yFzDHFfLVjgkQHguXaaaFX5ZwO6pvM",
+    "authDomain": "fir-f4899.firebaseapp.com",
     "databaseURL" : "",
-    "projectId": "sonicserenity-a3083",
-    "storageBucket": "sonicserenity-a3083.appspot.com",
-    "messagingSenderId": "119854965259",
-    "appId": "1:119854965259:web:4d78c7daf0d7858b709d0e",
-    "measurementId": "G-LNXJ85FYWG"
+    "projectId": "fir-f4899",
+    "storageBucket": "fir-f4899.firebasestorage.app",
+    "messagingSenderId": "1062149271973",
+    "appId": "1:1062149271973:web:6eebd91264e25971a1b84c",
+    "measurementId": "G-X4GY1WBBT2"
 }
+
+# config = {
+#     "apiKey": "AIzaSyBqWIbN3XzHSKgTRyFH2D9b4Ja9SIeEIDQ",
+#     "authDomain": "sonicserenity-a3083.firebaseapp.com",
+#     "databaseURL" : "",
+#     "projectId": "sonicserenity-a3083",
+#     "storageBucket": "fir-f4899.firebasestorage.app",
+#     "messagingSenderId": "119854965259",
+#     "appId": "1:119854965259:web:4d78c7daf0d7858b709d0e",
+#     "measurementId": "G-LNXJ85FYWG"
+# }
 
 class User(flask_login.UserMixin): 
     def __init__(self, id, username, type):
