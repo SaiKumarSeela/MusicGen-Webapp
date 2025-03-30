@@ -6,3 +6,4 @@ generated_music/*
 .env
 improved_model.h5
 .vscode/
+client_secret.json
