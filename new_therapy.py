@@ -52,7 +52,7 @@ mail = Mail(app)
 
 cred = credentials.Certificate("sonicserenity-a3083-firebase-adminsdk-1b9uk-48f8cd2ff5.json")
 firebase_admin.initialize_app(cred, {
-    'storageBucket': 'fir-f4899.firebasestorage.app'  
+    'storageBucket': 'fir-32a46.firebasestorage.app'  
 })
 db = firestore.client()
 bucket = storage.bucket()
@@ -64,7 +64,7 @@ doc.set({"play":"true"})
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret3.json")
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
@@ -72,15 +72,15 @@ flow = Flow.from_client_secrets_file(
     redirect_uri="http://127.0.0.1:3000/callback"
 )
 
-config = {
-    "apiKey": "AIzaSyC63yFzDHFfLVjgkQHguXaaaFX5ZwO6pvM",
-    "authDomain": "fir-f4899.firebaseapp.com",
+config =  {
+    "apiKey": "AIzaSyAehQ4Bg0tPyE422VtHE4P_0y9_c9xw0UI",
+    "authDomain": "fir-32a46.firebaseapp.com",
     "databaseURL" : "",
-    "projectId": "fir-f4899",
-    "storageBucket": "fir-f4899.firebasestorage.app",
-    "messagingSenderId": "1062149271973",
-    "appId": "1:1062149271973:web:6eebd91264e25971a1b84c",
-    "measurementId": "G-X4GY1WBBT2"
+    "projectId": "fir-32a46",
+    "storageBucket": "fir-32a46.firebasestorage.app",
+    "messagingSenderId": "268688396023",
+    "appId": "1:268688396023:web:92098d24b8b577b8ba8df2",
+    "measurementId": "G-Z16P57S32D"
 }
 
 # config = {
