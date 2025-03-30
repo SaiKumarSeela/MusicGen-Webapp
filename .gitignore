@@ -1,0 +1,8 @@
+chanting.wav
+tibetan.wav
+notes.txt
+muscicgen/*
+generated_music/*
+.env
+improved_model.h5
+.vscode/
