@@ -22,3 +22,6 @@ langchain_core
 langchain_groq
 librosa
 soundfile
+tensorflow
+tensorflow-cpu
+keras
