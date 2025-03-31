@@ -517,10 +517,12 @@
         }
     </script>
     <script type="module">
+
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js'; import { getFirestore, doc, getDoc, collection } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js'; // Fetch Firebase config from API endpoint
         fetch('/api/firebase-config') .then(response => response.json()) .then(firebaseConfig => { // Initialize Firebase with the fetched config const app = initializeApp(firebaseConfig); const db = getFirestore(app); // Define the checkDatabase function
         window.checkDatabase = function() { getDoc(doc(db, "SIgnal", "YVNeDHCXVFvg0G3wZc6c")).then(docSnap => { if (docSnap.exists()) { console.log("Data exists"); const data = docSnap.data(); const play = data["play"]; if (play === "true") { showLoadingVideo();
         } else if (play === "false") { hideLoadingVideo(); } } else { console.log("No data"); } }); } }) .catch(error => { console.error("Error loading Firebase configuration:", error); });
+
     </script>
 </body>
 

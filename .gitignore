@@ -6,9 +6,9 @@ generated_music/*
 .env
 .vscode/
 
-client_secret.json
 client_secret2.json
 
 firebaseconfig.json
 firebaseconfig1.json
 sample.json
+client_secret.json
