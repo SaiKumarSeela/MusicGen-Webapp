@@ -4,6 +4,11 @@ notes.txt
 muscicgen/*
 generated_music/*
 .env
-improved_model.h5
 .vscode/
 
+client_secret.json
+client_secret2.json
+
+firebaseconfig.json
+firebaseconfig1.json
+sample.json

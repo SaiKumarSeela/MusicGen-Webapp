@@ -21,7 +21,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore, storage
 
 from flask_mail import Mail, Message
-
+import json
 from dotenv import load_dotenv
 
 import wave
@@ -50,9 +50,37 @@ login_manager.init_app(app)
 
 mail = Mail(app)
 
-cred = credentials.Certificate("sonicserenity-a3083-firebase-adminsdk-1b9uk-48f8cd2ff5.json")
+firebase_project_id = os.getenv("FIREBASE_PROJECT_ID")
+firebase_private_key = os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n")  # Handle newlines
+firebase_client_email = os.getenv("FIREBASE_CLIENT_EMAIL")
+firebase_private_key_id = os.getenv("FIREBASE_PRIVATE_KEY_ID")
+firebase_client_id = os.getenv("FIREBASE_CLIENT_ID")
+
+firebase_config = {
+  "type": "service_account",
+  "project_id": firebase_project_id,
+  "private_key_id": firebase_private_key_id,
+  "private_key": firebase_private_key,
+  "client_email": firebase_client_email,
+  "client_id": firebase_client_id,
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40sonicserenity-a3083-3ed0b.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+
+CONFIG_API_KEY = os.getenv("CONFIG_API_KEY")
+CONFIG_AUTH_DOMAIN = os.getenv("CONFIG_AUTH_DOMAIN")
+CONFIG_PROJECT_ID = os.getenv("CONFIG_PROJECT_ID")
+CONFIG_STORAGE_BUCKET = os.getenv("CONFIG_STORAGE_BUCKET")
+CONFIG_MESSAGING_SENDER_ID = os.getenv("CONFIG_MESSAGING_SENDER_ID")
+CONFIG_APP_ID = os.getenv("CONFIG_APP_ID")
+CONFIG_MEASUREMENT_ID = os.getenv("CONFIG_MEASUREMENT_ID")
+
+cred = credentials.Certificate(firebase_config)
 firebase_admin.initialize_app(cred, {
-    'storageBucket': 'fir-32a46.firebasestorage.app'  
+    'storageBucket': CONFIG_STORAGE_BUCKET
 })
 db = firestore.client()
 bucket = storage.bucket()
@@ -63,36 +91,48 @@ doc.set({"play":"true"})
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 
-flow = Flow.from_client_secrets_file(
-    client_secrets_file=client_secrets_file,
-    scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="http://127.0.0.1:3000/callback"
-)
+google_client_id = os.getenv("GOOGLE_CLIENT_ID")
+google_project_id = os.getenv("GOOGLE_PROJECT_ID")
+google_client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
 
-config =  {
-    "apiKey": "AIzaSyAehQ4Bg0tPyE422VtHE4P_0y9_c9xw0UI",
-    "authDomain": "fir-32a46.firebaseapp.com",
-    "databaseURL" : "",
-    "projectId": "fir-32a46",
-    "storageBucket": "fir-32a46.firebasestorage.app",
-    "messagingSenderId": "268688396023",
-    "appId": "1:268688396023:web:92098d24b8b577b8ba8df2",
-    "measurementId": "G-Z16P57S32D"
+#client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+client_config = {
+    "web": {
+        "client_id": google_client_id,
+        "project_id": google_project_id,
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": google_client_secret,
+        "redirect_uris": ["http://127.0.0.1:5000/callback"],
+        "javascript_origins": ["http://127.0.0.1:5000"]
+    }
 }
 
-# config = {
-#     "apiKey": "AIzaSyBqWIbN3XzHSKgTRyFH2D9b4Ja9SIeEIDQ",
-#     "authDomain": "sonicserenity-a3083.firebaseapp.com",
-#     "databaseURL" : "",
-#     "projectId": "sonicserenity-a3083",
-#     "storageBucket": "fir-f4899.firebasestorage.app",
-#     "messagingSenderId": "119854965259",
-#     "appId": "1:119854965259:web:4d78c7daf0d7858b709d0e",
-#     "measurementId": "G-LNXJ85FYWG"
-# }
+flow = Flow.from_client_config(
+    client_config = client_config,
+    scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
+    redirect_uri="http://127.0.0.1:5000/callback"
+)
+
+
+config =   {
+    "apiKey": CONFIG_API_KEY,
+    "authDomain": CONFIG_AUTH_DOMAIN,
+    "databaseURL" : "",
+    "projectId": CONFIG_PROJECT_ID,
+    "storageBucket": CONFIG_STORAGE_BUCKET,
+    "messagingSenderId": CONFIG_MESSAGING_SENDER_ID,
+    "appId": CONFIG_APP_ID,
+    "measurementId": CONFIG_MEASUREMENT_ID
+}
+
+@app.route('/api/firebase-config')
+def firebase_config():
+    # Get Firebase config from environment variables
+    global config
+    return jsonify(config)
 
 class User(flask_login.UserMixin): 
     def __init__(self, id, username, type):
@@ -172,7 +212,7 @@ def callback():
     id_info = id_token.verify_oauth2_token(
         id_token=credentials._id_token,
         request=token_request,
-        audience=GOOGLE_CLIENT_ID
+        audience=google_client_id
     )
 
     print(id_info)
@@ -246,6 +286,7 @@ def protected_area():
             return render_template("music_generator.html",flask_login = flask_login, logged_in="yes", user_details = user_details, mood_questions=MOOD_QUESTIONS)
 
         else:
+            
             custom_audio = get_custom_audio(user_details["email"])
             custom_audio_url = get_custom_audio_url(user_details["email"], custom_audio)
             return render_template("steps.html",flask_login = flask_login, steps="", logged_in="yes", user_details = user_details, id="", custom_audio = custom_audio, custom_audio_url = custom_audio_url)
@@ -1001,7 +1042,7 @@ def get_started():
         custom_audio = get_custom_audio(id)
         custom_audio_url = get_custom_audio_url(id, custom_audio)
         #return render_template("music_generator.html",flask_login = flask_login, logged_in="yes", user_details = user_details, mood_questions=MOOD_QUESTIONS)
-        return render_template("steps.html",flask_login = flask_login, steps="", logged_in="yes", user_details = user_details, id="", custom_audio = custom_audio, custom_audio_url = custom_audio_url)
+        return render_template("steps.html",flask_login = flask_login,  steps="", logged_in="yes", user_details = user_details, id="", custom_audio = custom_audio, custom_audio_url = custom_audio_url)
     else:
         steps[0] = True
         return redirect("/google_login")
@@ -1054,7 +1095,7 @@ def load_on():
         webcam_process.start()
         custom_audio = get_custom_audio(user_details["email"])
         custom_audio_url = get_custom_audio_url(user_details["email"], custom_audio)
-    return render_template("steps.html",flask_login = flask_login, step = "1", logged_in="yes", user_details = user_details, id=id, custom_audio = custom_audio, custom_audio_url = custom_audio_url)
+    return render_template("steps.html",flask_login = flask_login,  step = "1", logged_in="yes", user_details = user_details, id=id, custom_audio = custom_audio, custom_audio_url = custom_audio_url)
 
 @app.route('/turn_camera_on', methods = ['POST', 'GET'])
 def camera_on():
@@ -1066,7 +1107,7 @@ def camera_on():
         start_time = time.time()
         custom_audio = get_custom_audio(user_details["email"])
         custom_audio_url = get_custom_audio_url(user_details["email"], custom_audio)
-    return render_template("steps.html",flask_login = flask_login, step = "2", logged_in="yes", user_details = user_details, id="", custom_audio = custom_audio, custom_audio_url = custom_audio_url)
+    return render_template("steps.html",flask_login = flask_login,   step = "2", logged_in="yes", user_details = user_details, id="", custom_audio = custom_audio, custom_audio_url = custom_audio_url)
 
 a = [1]
 @app.route('/turn_audio_on', methods = ['POST', 'GET'])
@@ -1082,7 +1123,7 @@ def audio_on():
     custom_audio_url = get_custom_audio_url(user_details["email"], custom_audio)
     audio_process.join()
     webcam_process.join()
-    return render_template("steps.html",flask_login = flask_login, step = "3", logged_in="yes", user_details = user_details, id="", custom_audio=custom_audio, custom_audio_url = custom_audio_url)
+    return render_template("steps.html",flask_login = flask_login,  step = "3", logged_in="yes", user_details = user_details, id="", custom_audio=custom_audio, custom_audio_url = custom_audio_url)
 
 @app.route('/stop_audio', methods = ['POST', 'GET'])
 def stop_audio():  
@@ -1092,7 +1133,7 @@ def stop_audio():
         f.write(str(True))
     custom_audio = get_custom_audio(user_details["email"])
     custom_audio_url = get_custom_audio_url(user_details["email"], custom_audio)
-    return render_template("steps.html",flask_login = flask_login, step = "4", logged_in="yes", user_details = user_details, id="", custom_audio=custom_audio, custom_audio_url = custom_audio_url)
+    return render_template("steps.html",flask_login = flask_login,   step = "4", logged_in="yes", user_details = user_details, id="", custom_audio=custom_audio, custom_audio_url = custom_audio_url)
 
 @app.route('/show_graph', methods = ['POST', 'GET'])
 def show_graph(): 
@@ -1209,7 +1250,7 @@ def upload_file():
     webcam_process.start()
     custom_audio = get_custom_audio(user_details["email"])
     custom_audio_url = get_custom_audio_url(user_details["email"], custom_audio)
-    return render_template("steps.html",flask_login = flask_login, step = "5", logged_in="yes", user_details = user_details, checkbox= a, custom_audio=custom_audio, custom_audio_url = custom_audio_url)
+    return render_template("steps.html",flask_login = flask_login,  step = "5", logged_in="yes", user_details = user_details, checkbox= a, custom_audio=custom_audio, custom_audio_url = custom_audio_url)
 
 @app.route('/services', methods=["POST", "GET"])
 def services():

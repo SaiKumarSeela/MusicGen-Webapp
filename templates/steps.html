@@ -517,10 +517,10 @@
         }
     </script>
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js'; import { getFirestore, doc, getDoc, collection } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js'; const firebaseConfig ={ apiKey: "AIzaSyAehQ4Bg0tPyE422VtHE4P_0y9_c9xw0UI",
-        authDomain: "fir-32a46.firebaseapp.com", projectId: "fir-32a46", storageBucket: "fir-32a46.firebasestorage.app", messagingSenderId: "268688396023", appId: "1:268688396023:web:92098d24b8b577b8ba8df2", measurementId: "G-Z16P57S32D"               };
-        const app = initializeApp(firebaseConfig); const db = getFirestore(app); window.checkDatabase = function() { getDoc(doc(db, "SIgnal", "YVNeDHCXVFvg0G3wZc6c")).then(docSnap => { if (docSnap.exists()) { console.log("Data exists"); const data = docSnap.data();
-        const play = data["play"]; if (play === "true") { showLoadingVideo(); } else if (play === "false") { hideLoadingVideo(); } } else { console.log("No data"); } }); }
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js'; import { getFirestore, doc, getDoc, collection } from 'https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js'; // Fetch Firebase config from API endpoint
+        fetch('/api/firebase-config') .then(response => response.json()) .then(firebaseConfig => { // Initialize Firebase with the fetched config const app = initializeApp(firebaseConfig); const db = getFirestore(app); // Define the checkDatabase function
+        window.checkDatabase = function() { getDoc(doc(db, "SIgnal", "YVNeDHCXVFvg0G3wZc6c")).then(docSnap => { if (docSnap.exists()) { console.log("Data exists"); const data = docSnap.data(); const play = data["play"]; if (play === "true") { showLoadingVideo();
+        } else if (play === "false") { hideLoadingVideo(); } } else { console.log("No data"); } }); } }) .catch(error => { console.error("Error loading Firebase configuration:", error); });
     </script>
 </body>
 
